@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: reducertest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reducertest
+  template:
+    metadata:
+      labels:
+        app: reducertest
+    spec: 
+      nodeSelector:
+        "beta.kubernetes.io/os": windows
+      containers:
+      - name: reducer0
+        image: litham.azurecr.io/reducer:v3
+        ports:
+        - containerPort: 443
+        env:
+        - name: partitionId
+          valueFrom: 
+            configMapKeyRef:
+              name: partition0
+              key: partitionId
+      - name: reducer1
+        image: litham.azurecr.io/reducer:v3
+        ports:
+        - containerPort: 443
+        env:
+        - name: partitionId
+          valueFrom:
+            configMapKeyRef:
+              name: partition1
+              key: partitionId
+        volumeMounts:
+        - mountPath: "C:/DiskFiles"
+          name: test
+      volumes:
+      - name: test
+        azureDisk:
+          kind: Managed
+          diskName: testdisk
+          diskURI: /subscriptions/d8cae7b6-5ff6-406d-b0ff-f4635c6d5ff2/resourceGroups/MC_lithamtest_windowstest_westus/providers/Microsoft.Compute/disks/testdisk
+          fsType: NTFS
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reducer
+spec:
+  ports:
+  - port: 443
+  selector:
+    app: reducertest

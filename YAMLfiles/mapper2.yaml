@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: mapper2
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: mapper2
+  template:
+    metadata:
+      labels:
+        app: mapper2
+    spec: 
+      nodeSelector:
+        "beta.kubernetes.io/os": windows
+      containers:
+      - name: mapper2
+        image: litham.azurecr.io/mappertest:v1
+        ports:
+        - containerPort: 80
+          name: mappertest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mapper2
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: mapper2
+    
+    

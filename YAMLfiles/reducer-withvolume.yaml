@@ -1,0 +1,147 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: reducer0replica0
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reducertest
+  template:
+    metadata:
+      labels:
+        app: reducertest
+    spec: 
+      nodeSelector:
+        "beta.kubernetes.io/os": windows
+      containers:
+      - name: reducer0replica0
+        image: litham.azurecr.io/reducer:v11
+        ports:
+        - containerPort: 443
+        env:
+        - name: partitionId
+          value: "0"
+        - name: replicaNum
+          value: "0"
+        volumeMounts:
+        - mountPath: "C:/DiskFiles"
+          name: reducer0files
+      volumes:
+      - name: reducer0files
+        persistentVolumeClaim:
+          claimName: partition0replica0
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: reducer0replica1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reducertest
+  template:
+    metadata:
+      labels:
+        app: reducertest
+    spec: 
+      nodeSelector:
+        "beta.kubernetes.io/os": windows
+      containers:
+      - name: reducer0replica1
+        image: litham.azurecr.io/reducer:v11
+        ports:
+        - containerPort: 443
+        env:
+        - name: partitionId
+          value: "0"
+        - name: replicaNum
+          value: "1"
+        volumeMounts:
+        - mountPath: "C:/DiskFiles"
+          name: reducer0files
+      volumes:
+      - name: reducer0files
+        persistentVolumeClaim:
+          claimName: partition0replica1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: reducer1replica0
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reducertest
+  template:
+    metadata:
+      labels:
+        app: reducertest
+    spec: 
+      nodeSelector:
+        "beta.kubernetes.io/os": windows
+      containers:
+      - name: reducer1replica0
+        image: litham.azurecr.io/reducer:v11
+        ports:
+        - containerPort: 443
+        env:
+        - name: partitionId
+          value: "1"
+        - name: replicaNum
+          value: "0"
+        volumeMounts:
+        - mountPath: "C:/DiskFiles"
+          name: reducer1files
+         
+      volumes:
+      - name: reducer1files
+        persistentVolumeClaim:
+          claimName: partition1replica0
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: reducer1replica1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reducertest
+  template:
+    metadata:
+      labels:
+        app: reducertest
+    spec: 
+      nodeSelector:
+        "beta.kubernetes.io/os": windows
+      containers:
+      - name: reducer1replica1
+        image: litham.azurecr.io/reducer:v11
+        ports:
+        - containerPort: 443
+        env:
+        - name: partitionId
+          value: "1"
+        - name: replicaNum
+          value: "1"
+        volumeMounts:
+        - mountPath: "C:/DiskFiles"
+          name: reducer1files
+         
+      volumes:
+      - name: reducer1files
+        persistentVolumeClaim:
+          claimName: partition1replica1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reducer
+spec:
+  ports:
+  - port: 443
+  selector:
+    app: reducertest
