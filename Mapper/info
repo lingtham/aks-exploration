@@ -1,0 +1,1 @@
+This project sends letters to an EventHub. There is a sender object for each partition. 
