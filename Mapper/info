@@ -1,1 +1,9 @@
 This project sends letters to an EventHub. There is a sender object for each partition. 
+
+I did not include any of the packages so you will have to download them.
+
+You can add Docker Support by going to Project > Add > Container Orchestra Support > select Docker Support. The VS generated Dockerfile
+is not very clear so the Dockerfile format I usually follow is:
+FROM base-image (can get from Microsoft's Docker repo)
+COPY *directory where the outputed .exe and its libaries are after building, such as in bin/Debug* .
+ENTRYPOINT ["App.exe"]
