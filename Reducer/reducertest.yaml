@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: reducertest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reducertest
+  template:
+    metadata:
+      labels:
+        app: reducertest
+    spec: 
+      nodeSelector:
+        "beta.kubernetes.io/os": windows
+      containers:
+      - name: reducer0
+        image: litham.azurecr.io/reducer:v3
+        ports:
+        - containerPort: 443
+        env:
+        - name: partitionId
+          valueFrom: 
+            configMapKeyRef:
+              name: partition0
+              key: partitionId
+      - name: reducer1
+        image: litham.azurecr.io/reducer:v3
+        ports:
+        - containerPort: 443
+        env:
+        - name: partitionId
+          valueFrom:
+            configMapKeyRef:
+              name: partition1
+              key: partitionId
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reducer
+spec:
+  ports:
+  - port: 443
+  selector:
+    app: reducertest
