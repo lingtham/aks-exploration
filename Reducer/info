@@ -1,0 +1,13 @@
+  Essentially there are 4 Tasks that make up the main class. 
+  
+  1) receiveEventsFromEventHub() - There is are 2 PartitionReceiver's, one for each partition. They consume events (the letters) from
+     their partition and counts the number of "" letter. The letter:sum pairs are stored in a RocksDB database. 
+     
+  2) getLease() - This Task continuously  tries to obtain a blob lease or renew it if it already has one. If the blob lease is obtained, 
+     it will set the isMaster boolean = true.
+     
+  3) sendResultsToEventHub() - If isMaster == true, this Task will be set off which will send its letter counting results to another Event
+     Hub
+     
+  4) DataBackupAndLog() - This Task logs the letter counting results every 5 minutes and also calls RocksDB's Checkpoint object's Save method
+     to create a snapshot of the database. The snapshot will be uploaded to Blob Storage to backup the data somewhere else.
