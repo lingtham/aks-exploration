@@ -121,7 +121,7 @@ namespace Reducer
         private static async Task receiveEventsFromEventHub(RocksDb db)
         {
             //Create Event Hub Client
-            var connectionStringBuilder = new EventHubsConnectionStringBuilder("");
+            var connectionStringBuilder = new EventHubsConnectionStringBuilder("")
             {
                 EntityPath = "mapper-reducer-try3"
             };
