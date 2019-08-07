@@ -13,7 +13,7 @@ namespace Mapper2
         private static EventHubClient eventHubClient;
         private static PartitionSender sender0;
         private static PartitionSender sender1;
-        private const string EventHubConnectionString = "Endpoint=sb://lithameh.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=si7lzvlr5n5pVm7eCsCnJa+xRX5FcDBS/daOj1lK8uw=";
+        private const string EventHubConnectionString = "";
         private const string EventHubName = "mapper-reducer-try3";
 
 
