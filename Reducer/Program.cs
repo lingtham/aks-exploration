@@ -21,7 +21,7 @@ namespace Reducer
         private static string backupPath = "C:\\" + dir + "\\RocksDBCheckpoint";
         private static Logger log = new Logger(dir);
         
-        private const string EventHubConnectionString = "Endpoint=sb://lithameh.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=si7lzvlr5n5pVm7eCsCnJa+xRX5FcDBS/daOj1lK8uw=";
+        private const string EventHubConnectionString = ""; //your EventHub connection string here
 
         private static StringBuilder logMessage = new StringBuilder();
         private static StringBuilder resultsEvent = new StringBuilder();
@@ -42,35 +42,12 @@ namespace Reducer
             
 
            
-                string storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=lithamstorage;AccountKey=Vd8egneKvbPDsqFIhGNl1+EiZXuot6QfSSOUyX7jYqSM0car16M/S2QQbrYdKPQ2YIJamohUnfil9DY2X9G0Yw==;EndpointSuffix=core.windows.net";
+                string storageConnectionString = ""; //your storage account connection string here
                 CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageConnectionString);
                 CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
                 CloudBlobContainer container = cloudBlobClient.GetContainerReference($"rocksdb-backup-partition{partitionId}-replica{replicaNum}"); //make this ifnotexistscreate method
                 
-                /*
-                 * Commented this out because container.CreateIfNotExistAsync was throwing a "the remote name could not be resolved" exception. Couldn't find out why
-                 
-                await container.CreateIfNotExistsAsync();
-
-            int numRetries = 3;
-            int retryDelay = 1000; //milliseconds
-            for (int i = 0; i < numRetries; i++)
-            {
-                try
-                {
-                    Console.WriteLine("in try loop for container creation");
-                    await container.CreateIfNotExistsAsync();
-                    Console.WriteLine("container created succesfully or already exists");
-                    break;
-                }
-                catch (Exception ex) when (i < numRetries)
-                {
-                    //Console.WriteLine($"{ex}")
-                    await Task.Delay(retryDelay);
-
-                }
-            }
-            */  
+                
                 
             try
             {
@@ -144,7 +121,7 @@ namespace Reducer
         private static async Task receiveEventsFromEventHub(RocksDb db)
         {
             //Create Event Hub Client
-            var connectionStringBuilder = new EventHubsConnectionStringBuilder("Endpoint=sb://lithameh.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=si7lzvlr5n5pVm7eCsCnJa+xRX5FcDBS/daOj1lK8uw=")
+            var connectionStringBuilder = new EventHubsConnectionStringBuilder("");
             {
                 EntityPath = "mapper-reducer-try3"
             };
@@ -261,7 +238,7 @@ namespace Reducer
         {
             Console.WriteLine($"{DateTime.Now}: in getLease()");
             //connection info for storage acct
-            string storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=lithamstorage;AccountKey=Vd8egneKvbPDsqFIhGNl1+EiZXuot6QfSSOUyX7jYqSM0car16M/S2QQbrYdKPQ2YIJamohUnfil9DY2X9G0Yw==;EndpointSuffix=core.windows.net";
+            string storageConnectionString = "";
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageConnectionString);
 
             int leaseLengthInSeconds = 60; //lease length can be between 15-60s or infinite (0s)
